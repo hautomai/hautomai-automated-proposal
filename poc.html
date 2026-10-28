@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Proposal Automation PoC</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f3;--panel:#fff;--ink:#1c1f24;--mut:#6b7280;--line:#d9dde3;--red:#c10e2c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161a;--panel:#1d2025;--ink:#e8eaed;--mut:#9aa0a8;--line:#33373e}}
+:root[data-theme="dark"]{--bg:#14161a;--panel:#1d2025;--ink:#e8eaed;--mut:#9aa0a8;--line:#33373e}
+html,body{height:100%;margin:0}body{font-family:Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.app{display:grid;grid-template-columns:350px 1fr;height:100%}
+.side{overflow:auto;background:var(--panel);border-right:1px solid var(--line);padding:14px}
+.main{overflow:auto;padding:14px 20px}
+h1{font-size:17px;margin:0 0 4px}.sub{font-size:12px;color:var(--mut);margin:0 0 12px}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin:18px 0 6px;border-bottom:1px solid var(--line);padding-bottom:4px}
+label{display:block;font-size:12px;color:var(--mut);margin:7px 0}
+label input:not([type=checkbox]),textarea{display:block;width:100%;box-sizing:border-box;margin-top:3px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:13px Roboto,Arial,sans-serif}
+textarea{resize:vertical}.ck{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:13px}
+button{font:500 13px Roboto,Arial,sans-serif;padding:7px 11px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+button.p{background:var(--red);border-color:var(--red);color:#fff}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chips{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:12px}
+.chip{padding:5px 10px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--mut);transition:.25s}
+.chip.on{background:var(--red);border-color:var(--red);color:#fff}.chips i{color:var(--mut);font-style:normal}
+dialog{max-width:760px;width:92%;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px}
+table.m{width:100%;border-collapse:collapse;font-size:12px}table.m td,table.m th{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left}
+pre{background:var(--bg);padding:10px;border-radius:6px;font-size:11px;max-height:200px;overflow:auto}
+/* proposal */
+#doc{width:816px;margin:0 auto;transform-origin:top left}
+.pg{width:816px;min-height:1056px;background:#fff;color:#111;margin:0 0 22px;box-shadow:0 4px 20px #0003;padding:0 56px;box-sizing:border-box;display:flex;flex-direction:column;position:relative;font-size:14px}
+.hd{height:62px;margin:14px 0 0;background:repeating-radial-gradient(ellipse at 75% 130%,#1b1b1b 0 7px,#2e2e2e 7px 9px);display:flex;justify-content:space-between;align-items:center;color:#fff;padding:0 18px;font-size:13px}
+.logo{border:1.5px solid #fff;padding:4px 12px;font-weight:700;letter-spacing:.15em;font-size:12px}
+.bd{flex:1;padding:12px 0 20px}.ft{background:#141414;color:#ccc;font-size:11px;padding:10px 16px;display:flex;justify-content:space-between}
+.pn{text-align:center;color:#999;font-size:12px;padding:12px 0 14px;margin:0 -56px}
+h2{color:var(--red);font-size:30px;margin:14px 0 14px}h4{color:var(--red);text-decoration:underline;font-size:14px;margin:0 0 4px}
+p{line-height:1.55;margin:0 0 12px;white-space:pre-wrap}ul{margin:3px 0 10px;padding-left:22px;font-size:13px;line-height:1.45}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px 34px}.cols{column-count:2;column-gap:34px}.g{break-inside:avoid;margin-bottom:12px}
+.x h4,.x li{text-decoration:line-through}.x li{color:#333}
+.im{background:#e3e5e9;color:#8a8f98;font-size:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;text-align:center}.im img{width:100%;height:100%;object-fit:cover}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cv{color:#fff;padding:0 72px;background:linear-gradient(rgba(28,32,44,.72),rgba(28,32,44,.55)),linear-gradient(115deg,#2f8f4e,#caa13a 30%,#c2447f 62%,#4b2fb0);background-size:cover;background-position:center}
+.cv h1{font-size:56px;margin:0 0 56px;font-weight:700}.cv h5{font-size:44px;font-weight:300;margin:0 0 40px;line-height:1.2}
+.cb{display:inline-block;width:14px;height:14px;border:1.5px solid #8aa;border-radius:3px;vertical-align:-2px;margin-right:8px;background:#fff}.cb.on{background:#5aa0f2;border-color:#5aa0f2}
+.geo{padding:8px 10px;margin:6px 0}.geo.off{background:#ececec}.geo b{font:700 15px Georgia,serif}
+.th{background:#9a9a9a;font:700 14px Georgia,serif;padding:12px 8px;display:flex;justify-content:space-between}
+.row{display:flex;justify-content:space-between;gap:20px;padding:12px 8px;border-bottom:2px solid #aaa}.row small{display:block;color:#888;margin-top:5px;font-size:12px}
+.tot{text-align:right;font-weight:700;font-size:17px;margin:18px 8px}.fld{display:flex;gap:14px;border-bottom:1px solid #ddd;padding:10px 6px;font-size:14px}.fld span{flex:1}
+.tag{background:#fff2a8;color:#6b4e00;padding:0 4px;border-radius:3px;font:11px ui-monospace,Menlo,monospace}.empty{opacity:.5}
+@media(max-width:900px){.app{grid-template-columns:1fr;height:auto}.side{overflow:visible}.main{overflow:visible}}
+@media print{.side,.bar,.chips{display:none}.app{display:block;height:auto}.main{overflow:visible;padding:0}#doc{zoom:1!important}.pg{margin:0;box-shadow:none;break-after:page}@page{size:letter;margin:0}}
+</style></head><body><div class="app">
+<aside class="side"><h1>CRM record</h1><p class="sub">Mini form standing in for the CRM payload. Edit any field and the proposal updates live.</p><div id="form"></div></aside>
+<main class="main">
+<div class="chips"><span class="chip" id="c0">CRM deal won</span><i>→</i><span class="chip" id="c1">Webhook / n8n</span><i>→</i><span class="chip" id="c2">Template merge</span><i>→</i><span class="chip" id="c3">PDF proposal</span></div>
+<div class="bar"><button class="p" id="bSample">Load sample CRM record</button><button id="bClear">Clear</button><button id="bTags">Show merge tags</button><button id="bMap">Template mapping</button><button id="bPrint">Print / Save PDF</button></div>
+<div id="doc"></div></main></div>
+<dialog id="dlg"><h1>Google Docs template mapping</h1><p class="sub">Each placeholder below lives in the Docs template exactly as written. An automation (n8n or Apps Script) pulls the CRM deal, replaces text tags, inserts images into image slots, and exports the Doc as PDF.</p><table class="m" id="mt"></table><h3>Payload sent by the CRM</h3><pre id="js"></pre><button id="bClose">Close</button></dialog>
+<script>
+const F=[['#','Cover page & contacts'],['quote_number','Quote number','t'],['site_address','Site address','t'],['project_title','Service title','t'],['date_created','Date created','t'],['account_manager','Account manager','t'],['our_company','Our company','t'],['contact_name','Contact name','t'],['company_name','Client company','t'],['cover_img','Cover image (optional)','i'],
+['#','Scope of work'],['scope','Scope of work text','a'],['areas','Areas to be surveyed (one per line)','a'],['areas_img','Areas image','i'],['equipment','Equipment (one per line)','a'],['siteplan_img','Site plan image','i'],
+['#','Site photos'],['photo1','Photo 1','i'],['photo2','Photo 2','i'],['photo3','Photo 3','i'],['photo4','Photo 4','i'],
+['#','Deliverables'],['deliverables','Deliverables list','a'],['plansheets','Plan sheets included','a'],['deliv_img1','Deliverable example 1','i'],['deliv_img2','Deliverable example 2','i'],
+['#','Plan sheet details'],['details_in','Included (# Heading, then one item per line)','a'],['details_out','Excluded (same format)','a'],['ortho','Orthogonal','c'],['true_geo','True geometry','c'],
+['#','Project costs'],['costs','Primary scope: [x] Title | note | $amount','a'],['comp','Complimentary services: Title | note | $amount','a'],['total','Project cost total','t'],
+['#','Proposal-specific terms'],['terms','Terms (one per line)','a']];
+const CRM={contact_name:'contact.full_name',company_name:'company.name',account_manager:'owner.name',our_company:'account.legal_name',date_created:'deal.created_at'};
+const SAMPLE={quote_number:'Q-2026-0142',site_address:'1234 Example Blvd, Danville, CA 94526',project_title:'Reality Capture and Building Documentation',date_created:'October 25, 2026',account_manager:'Alex Morgan',our_company:'Our Company, LLC',contact_name:'Jordan Lee',company_name:'Summit Climbing Co.',
+scope:'Thank you for the opportunity to provide a proposal on your project! The purpose of the project is 3D laser scanning and as-built documentation of the vacant retail suite at 1234 Example Blvd, Danville.\n\nThe objective is to provide accurate documentation (including clear-heights and column-grid data) to support the conversion into an indoor climbing gym, with options for point cloud + 2D CAD or full Revit BIM.\n\nWe will use 3D laser scanning to perform reality capture for approximately 7,988 square feet of space. Our team will register the data and produce your deliverables as outlined herein.',
+areas:'Exterior from grade\nInterior accessible areas',equipment:'Construction grade laser scanner (Color)',
+deliverables:'3D Point Cloud cleaned and registered\n3D Revit model to create 2D plan sheets\n2D CAD drawings to create 2D plan sheets\nArchitectural / MEP elements as described in the addendum\nPlan sheets printed to PDF\n*No other elements will be included within the drawings',
+plansheets:'Architectural Floor Plan\nArchitectural Reflected Ceiling Plans (RCP\'s)\nInterior Elevations\nExterior Elevations\nRoof Plan\nInterior MEP/FP Documentation (Standard Detail)\nSingle Line Sections\nBOMA',
+details_in:'# Architectural Floor Plans\nFloors (with elevations set in the main stairwell)\nExterior perimeter walls\nInterior partitions\nDoors and windows\nExposed columns (location and size only)\nSquare footage calculations\n# Architectural Reflected Ceiling Plans (RCP\'s)\nCeiling height and material\nExposed deck and beams\nCeiling-mounted devices (blocked out)\n# (2) Single Line Building Sections\n(1) Longitudinal Section\n(1) Transverse Section',
+details_out:'# Interior Elevations\nInterior walls\nCasework\nCrown and base molding\n# Roof Plan\nSkylights\nParapets\nVent pipes and roof drains\n# Site Features\nTopography and hardscapes\nCurbs, poles and bollards',
+ortho:true,true_geo:false,
+costs:'3D Laser Scanning in Color | Scan data delivered in .rcs, .rcp, or .e57. Includes mobilization, scanning, processing and delivery. | $2,500.00\n[x] 3D Revit Model & 2D CAD Drawings (Floor Plans, Sections, & RCP\'s) | See Scope of Work page for details | $2,400.00',
+comp:'3D Virtual Viewer (Truview) | Users can virtually walk through the data and create still images. Free software is provided. | $0.00\nData Storage and Digital File Management | | $0.00',total:'$4,900.00',
+terms:'It is the customer\'s responsibility to prepare the site for scanning, identify areas to be scanned, secure access and keep areas clear of obstructions. Delays caused by the customer may result in an increased price.\nIf this proposal is not accepted within 90 days of the date shown on Page 1, the pricing may be subject to review.\nIf the technician arrives on site and the work is cancelled, there will be a charge of $500.00 per requested technician.\nPayment terms 30 days net.\nFinal invoice amount may vary if square footage is greater than 5% larger than represented by the client.'};
+const S={};let tags=false;const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const T=k=>tags?`<span class="tag">{{${k}}}</span>`:(esc(S[k])||`<span class="empty">[${k}]</span>`);
+const L=k=>(S[k]||'').split('\n').map(s=>s.trim()).filter(Boolean);
+const UL=k=>tags?`<ul><li><span class="tag">{{${k}}}</span></li></ul>`:`<ul>${L(k).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+const IM=(k,t,h)=>`<div class="im" style="height:${h}px">${tags?`<span class="tag">{{${k}}}</span>`:S[k]?`<img src="${S[k]}" alt="">`:t}</div>`;
+const SEC=(k,c)=>{if(tags)return`<div class="${c}"><div class="g"><h4><span class="tag">{{${k}}}</span></h4></div></div>`;const g=[];L(k).forEach(l=>{if(l[0]==='#')g.push({h:l.slice(1).trim(),i:[]});else(g[g.length-1]||g[g.push({h:'',i:[]})-1]).i.push(l)});return`<div class="cols ${c}">${g.map(x=>`<div class="g"><h4>${esc(x.h)}</h4><ul>${x.i.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div>`).join('')}</div>`};
+const ROWS=k=>tags?`<div class="row"><span class="tag">{{${k}}}</span></div>`:L(k).map(l=>{let cb='';const m=l.match(/^\[( |x)\]\s*/i);if(m){cb=`<span class="cb ${m[1]!==' '?'on':''}"></span>`;l=l.slice(m[0].length)}const[a,b,c]=l.split('|').map(s=>(s||'').trim());return`<div class="row"><div>${cb}${esc(a)}${b?`<small>${esc(b)}</small>`:''}</div><div>${esc(c)}</div></div>`}).join('');
+const GEO=(k,t,x)=>{const on=!!S[k];return`<div class="geo ${on?'':'off'}"><span class="cb ${on?'on':''}"></span><b>${t}</b>${tags?` <span class="tag">{{${k}}}</span>`:''}<ul><li>${x}</li></ul></div>`};
+const N=7;const pg=(n,b,c='')=>`<section class="pg ${c}">${c?b:`<div class="hd"><span class="logo">LOGO</span><span>${T('quote_number')}</span></div><div class="bd">${b}</div><div class="ft"><span>${T('our_company')}</span><span>Quote ${T('quote_number')} · ${T('company_name')}</span></div>`}<div class="pn" style="${c?'color:#ddd;margin-top:auto':''}">Page ${n} of ${N}</div></section>`;
+function render(){
+const cv=S.cover_img&&!tags?`background-image:linear-gradient(rgba(28,32,44,.72),rgba(28,32,44,.55)),url("${S.cover_img}")`:'';
+$('#doc').innerHTML=
+`<section class="pg cv" style="${cv}"><div style="margin-top:300px"><h1>Quote for Services</h1><h5>${T('project_title')}</h5><div style="font-size:20px;font-weight:500">${T('site_address')}</div><div style="margin-top:6px;opacity:.9">Quote Number: ${T('quote_number')}</div></div>
+<div class="two" style="margin-top:auto;padding:0 0 70px;font-size:15px;line-height:1.9"><div><b>Created by:</b><br>${T('account_manager')}<br>${T('our_company')}<br>${T('date_created')}</div><div><b>Prepared for:</b><br>${T('contact_name')}<br>${T('company_name')}</div></div></section>`
++pg(2,`<h2>Scope of Work</h2><p>${T('scope')}</p><div class="two"><div><h4>Areas To Be Surveyed</h4>${UL('areas')}${IM('areas_img','Areas image',250)}</div><div><h4>Equipment</h4>${UL('equipment')}${IM('siteplan_img','Site plan image',250)}</div></div>`)
++pg(3,`<h2>Site Photos</h2><div class="grid4">${[1,2,3,4].map(i=>IM('photo'+i,'Site photo '+i,330)).join('')}</div>`)
++pg(4,`<h2>Deliverables</h2><p>Building elements and finished spaces that are in our scope as listed below that are visible and accessible during our survey will be captured with the intent of building the deliverables required. Elements will be modeled at a moderate level of detail.</p><div class="two"><div><h4>Deliverables to Include</h4>${UL('deliverables')}</div><div><h4>Plan Sheets included:</h4>${UL('plansheets')}</div></div><div class="two" style="margin:14px 0">${IM('deliv_img1','Deliverable example 1',200)}${IM('deliv_img2','Deliverable example 2',200)}</div><p>${T('our_company')} takes pride in our team’s ability to manage schedules to meet the deadline of your project. This project follows our standard “Next in Line” queue time unless a project deadline is provided. Expedited queue times and intermediate deliverables may be required to meet certain deadlines and may need a modification to this quote.</p>`)
++pg(5,`<h2>Plan Sheet Details</h2>${SEC('details_in','')}${SEC('details_out','x')}<p style="font-size:12px;margin:8px 0">*Notes: This is not a certified ALTA survey. Elements will be placed as generic blocks in their location approximating type and size.</p><h4 style="text-decoration:none;color:#111;font:700 16px Georgia,serif;margin:14px 0 4px">Elements Listed Above Will Be Modeled:</h4>${GEO('ortho','Orthogonal','Deliverables will be shown as a best fit; elements deflecting by less than 1" over 10\'-0" are modeled straight with 90-degree intersections. Clean, easy to dimension, and the industry standard.')}${GEO('true_geo','True Geometry','Deliverables will be shown as actually captured in the field, including out of plumb, sag and deflection. Revit models created this way will contain warnings and are harder to dimension.')}`)
++pg(6,`<h2>Project Costs</h2><div class="th"><span>Primary Scope</span><span>Cost</span></div>${ROWS('costs')}<div class="th"><span>Complimentary Services</span><span></span></div>${ROWS('comp')}<div class="tot">Project Cost &nbsp;&nbsp; ${T('total')}</div>`)
++pg(7,`<h2>Agreement</h2><p style="font-size:13px">This proposal is subject to the General Terms and Conditions for Services of ${T('our_company')} and is hereby incorporated by reference and made a part of this proposal. Customer acknowledges it has read and agrees to be bound by such Terms and Conditions.</p><h4 style="text-decoration:none;color:#111">PROPOSAL-SPECIFIC TERMS &amp; CONDITIONS</h4>${tags?`<ul><li><span class="tag">{{terms}}</span></li></ul>`:`<ol style="font-size:12.5px;line-height:1.45">${L('terms').map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`}<div style="margin-top:18px"><div class="fld"><span>Billing Company Name:</span></div><div class="fld"><span>Billing Address:</span></div><div class="fld"><span>Company Phone:</span><span>Company Email:</span></div><div class="fld"><span>Print Name:</span><span>PO#:</span><span>Job#:</span></div><div class="fld"><span>Signature</span><span>Date:</span></div></div>`);
+fit()}
+function fit(){const w=$('.main').clientWidth-40,z=Math.min(1,w/816);$('#doc').style.zoom=z}
+function build(){$('#form').innerHTML=F.map(f=>{if(f[0]==='#')return`<h3>${f[1]}</h3>`;const[k,l,t]=f;return t==='t'?`<label>${l}<input data-k="${k}"></label>`:t==='a'?`<label>${l}<textarea data-k="${k}" rows="4"></textarea></label>`:t==='c'?`<label class="ck"><input type="checkbox" data-k="${k}"> ${l}</label>`:`<label>${l}<input type="file" accept="image/*" data-i="${k}"></label>`}).join('');
+$('#form').oninput=e=>{const k=e.target.dataset.k;if(!k)return;S[k]=e.target.type==='checkbox'?e.target.checked:e.target.value;render()};
+$('#form').onchange=e=>{const k=e.target.dataset.i,f=e.target.files&&e.target.files[0];if(!k||!f)return;const r=new FileReader();r.onload=()=>{S[k]=r.result;render()};r.readAsDataURL(f)}}
+function load(o){Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,o);document.querySelectorAll('[data-k]').forEach(el=>{const v=S[el.dataset.k];if(el.type==='checkbox')el.checked=!!v;else el.value=v??''});render()}
+$('#bSample').onclick=()=>{[0,1,2,3].forEach(i=>{setTimeout(()=>{document.querySelectorAll('.chip').forEach((c,j)=>c.classList.toggle('on',j<=i));if(i===2)load(SAMPLE)},i*450)});setTimeout(()=>document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on')),2600)};
+$('#bClear').onclick=()=>load({});
+$('#bTags').onclick=e=>{tags=!tags;e.target.textContent=tags?'Show values':'Show merge tags';render()};
+$('#bPrint').onclick=()=>{try{window.print()}catch(e){alert('Open this file in your own browser and use Ctrl/Cmd+P to save as PDF.')}};
+$('#bMap').onclick=()=>{$('#mt').innerHTML='<tr><th>Docs placeholder</th><th>Field</th><th>CRM source</th></tr>'+F.filter(f=>f[0]!=='#').map(f=>`<tr><td><code>{{${f[0]}}}</code></td><td>${esc(f[1])}</td><td><code>${CRM[f[0]]||'deal.'+f[0]}</code>${f[2]==='i'?' (image URL)':f[2]==='c'?' (checkbox)':''}</td></tr>`).join('');
+const o={};for(const k in S)o[k]=String(S[k]).startsWith('data:')?'<image>':S[k];$('#js').textContent=JSON.stringify(o,null,2);$('#dlg').showModal()};
+$('#bClose').onclick=()=>$('#dlg').close();addEventListener('resize',fit);
+build();load(SAMPLE);
+</script></body></html>
